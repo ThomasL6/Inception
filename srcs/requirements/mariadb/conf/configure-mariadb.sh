@@ -2,7 +2,6 @@
 
 echo "[DB config] Configuring MariaDB..."
 
-#creation of the directory
 if [ ! -d "/run/mysqld" ]; then
 	echo "[DB config] Granting MariaDB daemon run permissions..."
 	mkdir -p /run/mysqld

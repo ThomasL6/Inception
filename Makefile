@@ -1,8 +1,10 @@
 LOGIN = thlefebv
 DOMAIN = ${LOGIN}.42.fr
 DATA_PATH = /home/${LOGIN}/data
+# create env to use it in docker-compose
 ENV = LOGIN=${LOGIN} DATA_PATH=${DATA_PATH} DOMAIN=${LOGIN}.42.fr
 
+#commands of docker
 all: up
 
 up: setup
@@ -23,6 +25,7 @@ status:
 logs:
 	cd srcs && docker compose logs && cd ..
 
+#to verify if the domain exist and to access 
 script:
 	if ! grep -q "$(DOMAIN)" "/etc/hosts"; then \
 		echo "127.0.0.1 $(DOMAIN)" | sudo tee -a /etc/hosts; \
