@@ -1,45 +1,44 @@
-LOGIN = thlefebv
-DOMAIN = ${LOGIN}.42.fr
-DATA_PATH = /home/${LOGIN}/data
-# create env to use it in docker-compose
-ENV = LOGIN=${LOGIN} DATA_PATH=${DATA_PATH} DOMAIN=${LOGIN}.42.fr
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: thlefebv <thlefebv@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/12/17 11:39:00 by thlefebv          #+#    #+#              #
+#    Updated: 2024/12/17 16:28:42 by thlefebv         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-#commands of docker
-all: up
+all:	build
+	sudo mkdir -p /home/thlefebv/data
+	sudo mkdir -p /home/thlefebv/data/wordpress
+	sudo mkdir -p /home/thlefebv/data/database
+	sudo mkdir -p /home/thlefebv/data/mariadb
+	sudo chmod 777 /etc/hosts
+	sudo chmod 777 /home
+	sudo sh -c echo "127.0.0.1 thlefebv.42.fr" >> /etc/hosts
+	sudo sh -c echo "127.0.0.1 www.thlefebv.42.fr" >> /etc/hosts
+	cd srcs/ && sudo docker compose up -d
 
-up: setup
-	${ENV} docker compose -f ./srcs/docker-compose.yml up -d --build
+build:
+	cd srcs/ && sudo docker compose build
 
-down:
-	${ENV} docker compose -f ./srcs/docker-compose.yml down
+stop: 
+	sudo docker compose -f srcs/docker-compose.yml stop
 
-start:
-	${ENV} docker compose -f ./srcs/docker-compose.yml start
+clean:
+	sudo docker compose -f srcs/docker-compose.yml down -v
 
-stop:
-	${ENV} docker compose -f ./srcs/docker-compose.yml stop
+fclean:
+	$(stop)
+	$(clean)
+	sudo docker system prune --force --volumes --all 
+	sudo rm -rf ~/data
 
-status:
-	cd srcs && docker compose ps && cd ..
+verif:
+	sudo docker system df
 
-logs:
-	cd srcs && docker compose logs && cd ..
-
-#to verify if the domain exist and to access 
-script:
-	if ! grep -q "$(DOMAIN)" "/etc/hosts"; then \
-		echo "127.0.0.1 $(DOMAIN)" | sudo tee -a /etc/hosts; \
-	fi 
-
-setup: script
-		sudo mkdir -p /home/${LOGIN}/
-		sudo mkdir -p ${DATA_PATH}
-		sudo mkdir -p ${DATA_PATH}/mariadb-data
-		sudo mkdir -p ${DATA_PATH}/wordpress-data
-
-clean: down
-		sudo rm -rf ${DATA_PATH}
+re: stop fclean all
 	
-fclean: clean
-		docker system prune	-f -a --volumes 
-
+.PHONY: build stop clean fclean re all verif
