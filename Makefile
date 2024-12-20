@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: thlefebv <thlefebv@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/12/17 11:39:00 by thlefebv          #+#    #+#              #
-#    Updated: 2024/12/17 16:28:42 by thlefebv         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 all:	build
 	sudo mkdir -p /home/thlefebv/data
 	sudo mkdir -p /home/thlefebv/data/wordpress
